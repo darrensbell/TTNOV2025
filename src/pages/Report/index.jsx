@@ -84,7 +84,7 @@ function Report() {
         <div className={styles.dashboardGrid}>
             <StatCard 
                 title="Total Box Office" 
-                value={`£${summary.totalBoxOffice.toLocaleString('en-GB', { minimumFractionDigits: 2 })}`}
+                value={`£${summary.totalBoxOffice.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`}
                 icon={<FaWallet />}
                 footer="Lifetime Total"
             />
