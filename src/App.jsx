@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import { FaHome, FaCog, FaUpload } from 'react-icons/fa';
+import Home from './pages/Home';
+import Report from './pages/Report';
+import IngestCSV from './components/IngestCSV';
+import styles from './App.module.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className={styles.app}>
+      <header className={styles.header}>
+        <div className={styles.logo}>
+          <Link to="/">TheatreTrack®</Link>
+        </div>
+        <nav className={styles.nav}>
+          <Link to="/" className={styles.navButton}><FaHome /> HOME</Link>
+          <button className={styles.navButton} onClick={() => setIsModalOpen(true)}><FaUpload /> INGEST CSV</button>
+          <button className={styles.navButton} onClick={() => alert('Settings not implemented yet')}><FaCog /> SETTINGS</button>
+        </nav>
+      </header>
+      <main className={styles.mainContent}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/report/:eventName" element={<Report />} />
+        </Routes>
+      </main>
+      <IngestCSV isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </div>
+  );
 }
 
-export default App
+export default App;
