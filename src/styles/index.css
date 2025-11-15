@@ -14,14 +14,20 @@ body {
 }
 
 .stat-card {
-    background-color: var(--background-light);
+    backdrop-filter: blur(10px);
     border-radius: 8px;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    border: 1px solid var(--border-color);
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    background-color: var(--glass-green-bg);
+    border: 1px solid var(--glass-green-border);
+}
+
+.stat-card--pink {
+    background-color: var(--glass-pink-bg);
+    border: 1px solid var(--glass-pink-border);
 }
 
 .stat-card-title {

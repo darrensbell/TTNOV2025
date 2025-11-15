@@ -5,8 +5,8 @@ import { db } from '../../services/firebase';
 import styles from './style.module.css';
 import { FaWallet, FaTicketAlt, FaPercentage, FaClock, FaCalendarDay } from 'react-icons/fa';
 
-const StatCard = ({ title, value, icon, footer }) => (
-    <div className={`stat-card ${styles.statCard}`}>
+const StatCard = ({ title, value, icon, footer, cardClassName }) => (
+    <div className={`stat-card ${styles.statCard} ${cardClassName || ''}`}>
         <div className="stat-card-title">
             <span>{title}</span>
             <div className="stat-card-icon">{icon}</div>
@@ -105,12 +105,14 @@ function Report() {
                 value={`£${summary.overallATP.toFixed(2)}`}
                 icon={<FaClock />}
                 footer="Avg. Ticket Price"
+                cardClassName="stat-card--pink"
             />
             <StatCard 
                 title="Days to Performance" 
                 value={summary.daysToPerformance !== undefined ? summary.daysToPerformance : 'N/A'}
                 icon={<FaCalendarDay />}
                 footer="Until first show"
+                cardClassName="stat-card--pink"
             />
         </div>
       ) : (

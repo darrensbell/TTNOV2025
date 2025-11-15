@@ -9,7 +9,12 @@
   --accent-green: #10B981;
   --accent-red: #F43F5E;
   --border-color: #334155;
-  
+
+  --glass-green-bg: rgba(22, 163, 74, 0.1);
+  --glass-green-border: #16A34A;
+  --glass-pink-bg: rgba(190, 24, 93, 0.1);
+  --glass-pink-border: #BE185D;
+
   --font-family-sans: system-ui, Avenir, Helvetica, Arial, sans-serif;
   --line-height-base: 1.5;
   --font-weight-normal: 400;
