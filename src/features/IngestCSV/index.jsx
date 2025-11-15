@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
-import styles from './IngestCSV.module.css';
+import styles from './style.module.css';
 
 function IngestCSV({ isOpen, onClose }) {
   const [file, setFile] = useState(null);

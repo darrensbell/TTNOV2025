@@ -1,0 +1,16 @@
+
+:root {
+  --background-dark: #0F172A;
+  --background-light: #1E293B;
+  --primary: #4F46E5;
+  --secondary: #EC4899;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --accent-green: #10B981;
+  --accent-red: #F43F5E;
+  --border-color: #334155;
+  
+  --font-family-sans: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --line-height-base: 1.5;
+  --font-weight-normal: 400;
+}

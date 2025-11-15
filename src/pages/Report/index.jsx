@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase';
-import styles from './Report.module.css';
+import styles from './style.module.css';
 import { FaWallet, FaTicketAlt, FaPercentage, FaClock, FaCalendarDay } from 'react-icons/fa';
 
 const StatCard = ({ title, value, icon, footer }) => (

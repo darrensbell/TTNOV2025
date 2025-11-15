@@ -1,0 +1,23 @@
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--background-light);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.main-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin: 0 1rem;
+}
+
+.main-nav a.active {
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.mainContent {
+    padding-bottom: 60px; /* Add padding to the bottom to avoid overlap with the footer */
+}

@@ -3,7 +3,7 @@ import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import IngestionModal from '../../components/IngestionModal';
 import ConfirmationModal from '../../components/ConfirmationModal';
-import styles from './Admin.module.css';
+import styles from './style.module.css';
 
 // Helper function to format Firestore Timestamps into dd/MM/yyyy HH:mm:ss
 const formatTimestamp = (timestamp) => {

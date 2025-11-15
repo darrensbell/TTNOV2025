@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase';
-import styles from './Home.module.css';
+import styles from './style.module.css';
 import { FaHome, FaPoundSign, FaTicketAlt } from 'react-icons/fa';
 
 function Home() {

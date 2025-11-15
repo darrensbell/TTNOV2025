@@ -1,0 +1,41 @@
+.footer {
+  background-color: var(--background-light);
+  border-top: 1px solid var(--border-color);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: var(--text-secondary);
+  z-index: 1000;
+}
+
+.dbStatus {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dbIcon {
+  margin-right: 8px;
+  color: var(--accent-green);
+  font-size: 18px;
+}
+
+.statusLight {
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-green);
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 5px var(--accent-green);
+}
+
+.time, .version {
+  font-family: monospace;
+}
