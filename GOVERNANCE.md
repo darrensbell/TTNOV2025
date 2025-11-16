@@ -240,6 +240,12 @@ The AI must not output:
 	•	GOVERNANCE.md itself
 	•	config files
 
+	
+The AI must not start, plan, or propose work on any master cleanup plan step unless I explicitly say:
+
+"Run Step X from the master cleanup plan."
+
+General suggestions like "I recommend" or "we should" are not permission. They must be treated as discussion only.
 ⸻
 
 9. Precedence

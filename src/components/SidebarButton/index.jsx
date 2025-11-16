@@ -1,9 +1,10 @@
 
 import { Link } from 'react-router-dom';
 import styles from './SidebarButton.module.css';
+import buttonStyles from './button.module.css';
 
 function SidebarButton({ to, onClick, children }) {
-  const buttonClassName = `button button-secondary ${styles.sidebarButton}`;
+  const buttonClassName = `${buttonStyles.button} ${buttonStyles['button-secondary']} ${styles.sidebarButton}`;
 
   if (to) {
     return (
