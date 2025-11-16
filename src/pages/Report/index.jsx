@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import styles from './style.module.css';
-import { FaWallet, FaTicketAlt, FaPercentage, FaClock, FaCalendarDay } from 'react-icons/fa';
+import { FaWallet, FaTicketAlt, FaPercentage, FaClock, FaCalendarDay, FaHistory } from 'react-icons/fa';
 
 const StatCard = ({ title, value, icon, footer, cardClassName }) => (
     <div className={`stat-card ${styles.statCard} ${cardClassName || ''}`}>
@@ -27,7 +27,7 @@ function Report() {
         if (eventName) {
           const decodedEventName = decodeURIComponent(eventName);
 
-          // Fetch sales data
+          // Fetch sales data for total calculations
           const salesDataCollection = collection(db, 'sales_data');
           const salesQuery = query(salesDataCollection, where('Event Name', '==', decodedEventName));
           const salesQuerySnapshot = await getDocs(salesQuery);
@@ -79,6 +79,48 @@ function Report() {
           const occupancy = (totalTicketsAvailable > 0)
             ? ((calculatedSummary.totalTicketsSold / totalTicketsAvailable) * 100).toFixed(1) + '%'
             : 'N/A';
+
+          // --- Calculate Last Day's Sales from daily_event_summary (Yesterday) ---
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1); // Set to yesterday
+          const yesterdayDateString = yesterday.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+          const dailySummaryCollection = collection(db, 'daily_event_summary');
+          const yesterdaySummaryQuery = query(
+            dailySummaryCollection,
+            where('Event Name', '==', decodedEventName),
+            where('TransactionDate', '==', yesterdayDateString)
+          );
+          const yesterdaySummarySnapshot = await getDocs(yesterdaySummaryQuery);
+
+          let lastDayTotalBoxOffice = 0;
+          let lastDayTotalTicketsSold = 0;
+          const lastDayAtpValues = [];
+
+          if (!yesterdaySummarySnapshot.empty) {
+            yesterdaySummarySnapshot.docs.forEach(doc => {
+              const data = doc.data();
+              lastDayTotalBoxOffice += parseFloat(data.totalSoldGrossValue) || 0;
+              lastDayTotalTicketsSold += parseInt(data.totalSoldTickets, 10) || 0;
+              // ATP from summary table is already an aggregate, so we need to calculate a new ATP for the full day
+              // based on aggregated gross and tickets for the day.
+              // For individual sales within a summary entry, if available, we'd average them. 
+              // For now, we'll recalculate ATP for the entire day's summary.
+              const currentATP = (parseFloat(data.totalSoldTickets) > 0)
+                ? (parseFloat(data.totalSoldGrossValue) / parseFloat(data.totalSoldTickets))
+                : 0;
+              if (currentATP > 0) lastDayAtpValues.push(currentATP);
+            });
+          }
+
+          const lastDayOverallATP = lastDayAtpValues.length > 0
+            ? (lastDayAtpValues.reduce((a, b) => a + b, 0) / lastDayAtpValues.length)
+            : 0; // If no sales, ATP is 0
+
+          calculatedSummary.lastDayBoxOffice = lastDayTotalBoxOffice;
+          calculatedSummary.lastDayTicketsSold = lastDayTotalTicketsSold;
+          calculatedSummary.lastDayOverallATP = lastDayOverallATP;
+          // -- End Last Day's Sales Calculation --
 
           setSummary({ ...calculatedSummary, occupancy, totalTicketsAvailable });
         }
@@ -134,6 +176,26 @@ function Report() {
                 icon={<FaCalendarDay />}
                 footer="Until first show"
                 cardClassName="stat-card--pink"
+            />
+
+            {/* Last Day's Sales Cards */}
+            <StatCard 
+                title="Last Day Gross" 
+                value={`£${summary.lastDayBoxOffice.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`}
+                icon={<FaWallet />}
+                footer="Yesterday's Sales"
+            />
+            <StatCard 
+                title="Last Day Tickets" 
+                value={summary.lastDayTicketsSold.toLocaleString('en-GB')}
+                icon={<FaTicketAlt />}
+                footer="Yesterday's Sales"
+            />
+            <StatCard 
+                title="Last Day ATP" 
+                value={`£${summary.lastDayOverallATP.toFixed(2)}`}
+                icon={<FaClock />}
+                footer="Yesterday's Sales"
             />
         </div>
       ) : (
