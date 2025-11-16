@@ -240,7 +240,7 @@ The AI must not output:
 	•	GOVERNANCE.md itself
 	•	config files
 
-	
+
 The AI must not start, plan, or propose work on any master cleanup plan step unless I explicitly say:
 
 "Run Step X from the master cleanup plan."
@@ -284,7 +284,34 @@ To allow productive work without constant micro instructions, the AI has control
 
 But the AI must always present proposals first and wait for approval before altering existing files.
 
-⸻
+11.1	Canonical File Rule
+
+The application must never contain two files that implement the same component or feature. When two versions appear to exist, the AI must identify the canonical file by comparing the contents of both files, not by guessing or inferring.
+
+A canonical file is the one that contains the full implementation. This includes logic, hooks, styles, and JSX. A second version may exist only as a thin compatibility shim.
+
+A compatibility shim must do the following and nothing else:
+
+• Contain a single re export statement
+• Contain no logic, styling, state, or side effects
+• Contain a clear comment that identifies the canonical file
+
+Allowed example:
+
+// Compatibility shim. The canonical component is in src/components/IngestionModal.
+export { default } from '../../components/IngestionModal';
+
+Rules the AI must follow:
+
+• The AI must check and compare the content of both files before deciding which is canonical
+• The canonical version must always live inside the correct folder that matches the GOVERNANCE structure
+• The shim must never diverge from the canonical version
+• The shim must never contain duplication of logic or styling
+• The AI must never delete a non empty file unless you give written approval
+• If the AI detects ambiguity between two possible canonical files, the AI must halt and request a written decision
+• The AI must update imports only after the canonical file has been confirmed
+
+This rule prevents duplication, prevents accidental overwrite, and ensures all logic lives in exactly one place.
 
 12. Final rule
 
