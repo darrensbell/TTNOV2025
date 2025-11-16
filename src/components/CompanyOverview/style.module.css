@@ -1,0 +1,49 @@
+.overviewCard {
+    background-color: var(--card-bg-dark);
+    padding: var(--padding-lg);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 2rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.header svg {
+    font-size: 1.5rem;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.statLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.statValue {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
