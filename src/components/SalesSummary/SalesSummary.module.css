@@ -1,0 +1,25 @@
+.salesSummary {
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.salesSummary h4 {
+  margin: 0 0 10px 0;
+  color: var(--text-secondary);
+  font-weight: normal;
+}
+
+.salesSummary .data {
+  display: flex;
+  justify-content: space-between;
+}
+
+.salesSummary .data p {
+  margin: 0;
+  font-weight: 600;
+}

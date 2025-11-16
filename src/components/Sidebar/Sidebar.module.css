@@ -16,8 +16,13 @@
 }
 
 .nav {
-  flex-grow: 1;
   padding-top: 1rem;
+}
+
+.salesSummaries {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+  flex-grow: 1;
 }
 
 .footer {

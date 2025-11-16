@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.6] - 2024-07-26
+
+### Changed
+- Formatted gross sales figures to use 'K' for thousands and 'M' for millions to save space.
+- Removed decimal points from gross sales figures for a cleaner look.
+- Increased the font weight of sales figures for better readability.
+- Added a white glow effect to the sales summary cards.
+
 ## [1.2.0] - 2024-07-25
 
 ### Changed
