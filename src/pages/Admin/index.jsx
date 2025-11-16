@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getDocs, deleteDoc, doc, writeBatch, setDoc, query, orderBy } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  writeBatch,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import styles from './style.module.css';
@@ -13,13 +21,16 @@ function Admin() {
 
   const fetchSummaryData = async () => {
     try {
-        const summaryCollection = collection(db, 'daily_event_summary');
-        const q = query(summaryCollection, orderBy('TransactionDate', 'desc'));
-        const querySnapshot = await getDocs(q);
-        const summaryData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setSummaryData(summaryData);
+      const summaryCollection = collection(db, 'daily_event_summary');
+      const q = query(summaryCollection, orderBy('TransactionDate', 'desc'));
+      const querySnapshot = await getDocs(q);
+      const mapped = querySnapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...docSnap.data(),
+      }));
+      setSummaryData(mapped);
     } catch (error) {
-        console.error("Error fetching daily summaries from Firestore: ", error);
+      console.error('Error fetching daily summaries from Firestore: ', error);
     }
   };
 
@@ -35,25 +46,27 @@ function Admin() {
   const handleDeleteAllData = async () => {
     closeDeleteModal();
     try {
-        const salesDataCollection = collection(db, 'sales_data');
-        const querySnapshot = await getDocs(salesDataCollection);
-        const deletePromises = querySnapshot.docs.map((document) => 
-            deleteDoc(doc(db, 'sales_data', document.id))
-        );
-        await Promise.all(deletePromises);
+      // Delete from sales_data
+      const salesDataCollection = collection(db, 'sales_data');
+      const salesSnapshot = await getDocs(salesDataCollection);
+      const deleteSales = salesSnapshot.docs.map((document) =>
+        deleteDoc(doc(db, 'sales_data', document.id)),
+      );
+      await Promise.all(deleteSales);
 
-        const summaryCollection = collection(db, 'daily_event_summary');
-        const summarySnapshot = await getDocs(summaryCollection);
-        const deleteSummaryPromises = summarySnapshot.docs.map((document) =>
-            deleteDoc(doc(db, 'daily_event_summary', document.id))
-        );
-        await Promise.all(deleteSummaryPromises);
+      // Delete from daily_event_summary
+      const summaryCollection = collection(db, 'daily_event_summary');
+      const summarySnapshot = await getDocs(summaryCollection);
+      const deleteSummary = summarySnapshot.docs.map((document) =>
+        deleteDoc(doc(db, 'daily_event_summary', document.id)),
+      );
+      await Promise.all(deleteSummary);
 
-        setSummaryData([]);
-        alert('All data has been deleted.');
+      setSummaryData([]);
+      alert('All data has been deleted.');
     } catch (error) {
-        console.error("Error deleting data: ", error);
-        alert('An error occurred while deleting data.');
+      console.error('Error deleting data: ', error);
+      alert('An error occurred while deleting data.');
     }
   };
 
@@ -64,55 +77,84 @@ function Admin() {
       const salesSnapshot = await getDocs(collection(db, 'sales_data'));
       const summary = {};
 
-      salesSnapshot.forEach(doc => {
-        const sale = doc.data();
+      salesSnapshot.forEach((docSnap) => {
+        const sale = docSnap.data();
         const key = `${sale.TransactionDate}-${sale['Event Name']}-${sale.performanceType}`;
 
         if (!summary[key]) {
           summary[key] = {
-            'TransactionDate': sale.TransactionDate,
+            TransactionDate: sale.TransactionDate,
             'Event Name': sale['Event Name'],
-            'performanceType': sale.performanceType,
-            'totalSoldGrossValue': 0,
-            'totalSoldTickets': 0,
-            'totalCompTickets': 0,
+            performanceType: sale.performanceType,
+            totalSoldGrossValue: 0,
+            totalSoldTickets: 0,
+            totalCompTickets: 0,
           };
         }
 
-        summary[key].totalSoldGrossValue += parseFloat(sale['Sold Gross Value']);
-        summary[key].totalSoldTickets += parseInt(sale['Sold Tickets'], 10);
-        summary[key].totalCompTickets += parseInt(sale['Comp Tickets'], 10);
+        summary[key].totalSoldGrossValue += parseFloat(
+          sale['Sold Gross Value'],
+        );
+        summary[key].totalSoldTickets += parseInt(
+          sale['Sold Tickets'],
+          10,
+        );
+        summary[key].totalCompTickets += parseInt(
+          sale['Comp Tickets'],
+          10,
+        );
       });
 
-      const batchCommit = writeBatch(db);
-      for (const key in summary) {
+      const batch = writeBatch(db);
+      Object.values(summary).forEach((row) => {
         const summaryRef = doc(collection(db, 'daily_event_summary'));
-        batchCommit.set(summaryRef, summary[key]);
-      }
+        batch.set(summaryRef, row);
+      });
 
-      await batchCommit.commit();
+      await batch.commit();
       setConsolidationStatus('Successfully consolidated all data!');
-      fetchSummaryData(); // Refresh the table
+      fetchSummaryData();
     } catch (error) {
       console.error('Error consolidating data:', error);
-      setConsolidationStatus('An error occurred. Please check the console for details.');
+      setConsolidationStatus(
+        'An error occurred. Please check the console for details.',
+      );
     }
   };
 
   return (
     <div className={styles.container}>
       <h1>Admin</h1>
-      <Link to="/" className={styles.backButton}>Back to Home</Link>
-      <Link to="/datafix" className={styles.actionButton}>Migrate Old Data</Link>
-      <button onClick={openConsolidateModal} className={styles.actionButton}>Consolidate All Data</button>
-      <button onClick={openDeleteModal} className={styles.deleteButton}>Delete All Data</button>
-      
+
+      <Link to="/" className={styles.backButton}>
+        Back to Home
+      </Link>
+
+      <Link to="/datafix" className={styles.actionButton}>
+        Migrate Old Data
+      </Link>
+
+      <button
+        onClick={openConsolidateModal}
+        className={styles.actionButton}
+      >
+        Consolidate All Data
+      </button>
+
+      <button
+        onClick={openDeleteModal}
+        className={styles.deleteButton}
+      >
+        Delete All Data
+      </button>
+
       <ConfirmationModal
         isOpen={isConsolidateModalOpen}
         onClose={closeConsolidateModal}
         onConfirm={handleConsolidate}
         message="Are you sure you want to consolidate all data? This will process all existing sales data and create a new summary collection."
       />
+
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
@@ -123,6 +165,7 @@ function Admin() {
       {consolidationStatus && <p>{consolidationStatus}</p>}
 
       <h2>Daily Event Summary</h2>
+
       {summaryData.length > 0 ? (
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
@@ -139,12 +182,12 @@ function Admin() {
             <tbody>
               {summaryData.map((row) => (
                 <tr key={row.id}>
-                  <td>{row['TransactionDate']}</td>
+                  <td>{row.TransactionDate}</td>
                   <td>{row['Event Name']}</td>
-                  <td>{row['performanceType']}</td>
-                  <td>{row['totalSoldGrossValue']}</td>
-                  <td>{row['totalSoldTickets']}</td>
-                  <td>{row['totalCompTickets']}</td>
+                  <td>{row.performanceType}</td>
+                  <td>{row.totalSoldGrossValue}</td>
+                  <td>{row.totalSoldTickets}</td>
+                  <td>{row.totalCompTickets}</td>
                 </tr>
               ))}
             </tbody>

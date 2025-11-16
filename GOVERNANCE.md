@@ -1,286 +1,340 @@
 GOVERNANCE.md
 
-Universal App Structure and AI Conduct Law
-Status: Binding
+Universal App Structure and AI Behaviour Law
+Mode: Balanced
 Owner: Darren Bell
 Effective Date: 17 Nov 2025
+Status: Binding
 
-This file governs every action taken by AI inside this project.
+This file governs every action taken by AI working inside this project.
 Anything that does not comply with this document is invalid.
 
 The model must locate this file by checking both GOVERNANCE.md and Governance.md.
-The content of this file always overrides model assumptions.
 
 ⸻
 
 1. Purpose
 
-This app must remain stable, predictable, and safe to change.
-The AI must help improve the structure without breaking anything.
-The AI must avoid damaging working code, overwriting logic, or deleting styles.
-The AI must not assume or invent tasks.
+This app must remain:
 
-The AI must balance two goals:
-	1.	Prevent breaking changes.
-	2.	Allow careful, guided improvement, even if the user does not know file paths.
+• stable
+• predictable
+• safe to modify
+• safe to extend
+
+The AI must:
+
+• never break working code
+• never delete anything without permission
+• never overwrite files without permission
+• never assume user intent
+• always protect styles, layouts, and index files
+• propose structural changes before performing them
+• allow Darren to save versions cleanly
+
+The AI must balance:
+	1.	safety
+	2.	progress
+	3.	clarity for the user (even when the user does not know file paths)
 
 ⸻
 
-2. Absolute Authority Rules
-	1.	Only written instructions from Darren Bell allow any action.
-	2.	If something is unclear, the AI must stop and ask a clear question.
-	3.	The AI may propose improvements, but must never act on them until Darren approves.
-	4.	Nothing is implemented unless Darren explicitly approves the action.
+2. Authority Rules
+	1.	Only written instructions from Darren Bell allow any change.
+	2.	If unclear, the AI must stop and ask.
+	3.	The AI may propose improvements but must not implement them until Darren explicitly approves.
+	4.	Nothing is changed unless Darren writes approval.
+	5.	Proposals must be short, precise, and linked to specific files.
 
 ⸻
 
 3. App Structure Standard
 
-The app must follow this folder layout:
-
 src/
-  pages/      view and route logic
+  pages/      route + view logic
   components/ reusable UI units
-  services/   data, network, caching, logic
-  utils/      stateless helpers
-  styles/     global and theme styles
+  services/   data, firestore, operations
+  utils/      pure stateless helpers
+  styles/     global + theme
   hooks/      shared React hooks
-  contexts/   React context providers
+  contexts/   React context
 
-Rules for structure:
-	1.	The AI may move files into the correct folder if that file clearly belongs there.
-	2.	The AI must never move a file if the purpose is uncertain. It must ask Darren first.
-	3.	The AI may not create any new top level folder.
-	4.	The AI may create new folders inside src if needed for clarity, but must state the purpose and wait for approval.
+Structure rules
+	1.	If a file’s purpose is obvious, the AI may propose where it belongs.
+	2.	If purpose is unclear, AI must ask Darren for clarification.
+	3.	AI may never create new top-level folders outside src.
+	4.	AI may create new folders inside src after proposing them and receiving approval.
 
 ⸻
 
 4. File Protection Rules
 
-4.1 Index file protection
+4.1 Index File Protection
 
-Index files are read only unless unlocked.
-This includes:
-	•	index.tsx
-	•	index.ts
-	•	index.jsx
-	•	index.js
+Protected files include:
 
-The AI must never delete, replace, merge, or rename an index file unless Darren writes:
-“I authorise modification of [full path]”.
+• index.jsx
+• index.js
+• index.ts
+• index.tsx
 
-If the AI believes an index file needs changes, it must propose them, then wait.
+AI must not modify an index file unless Darren writes:
 
-4.2 Style file protection
+“I authorise modification of [full path].”
 
-Style files include:
-	•	*.css
-	•	*.module.css
-	•	*.scss
+AI may read index files to understand structure.
 
-The AI must never delete, merge, or overwrite any style file unless Darren gives permission.
+⸻
 
-The AI may:
-	1.	read style files
-	2.	propose improvements or reorganisations
-	3.	request permission to clean or restructure
-	4.	create new style files if needed
+4.2 Style File Protection
 
-The AI must not auto merge or auto consolidate styling.
+Includes:
 
-4.3 No deletion without explicit permission
+• *.css
+• *.module.css
+• *.scss
 
-The AI must never delete any file or folder unless Darren writes:
-“I authorise deletion of [path]”.
+The AI must not delete, merge, replace, or consolidate any style file unless Darren explicitly authorises it.
 
-If the AI thinks a file is redundant, it must propose removal, then wait.
+Allowed:
 
-4.4 No overwriting entire files
+• read style files
+• propose reorganisations
+• request permission to merge or relocate
+• create new style files if needed
 
-The AI must not replace the full content of any existing file unless Darren writes:
-“I authorise overwrite of [path]”.
+Forbidden:
 
-Partial edits are allowed if Darren has already asked for an update to that file.
+• auto-rewrite
+• auto-merge
+• auto-optimise
 
-4.5 Legacy files
+⸻
 
-If the AI discovers older duplicates or files in the wrong place, it must:
-	1.	propose the correct final location
-	2.	propose a migration plan
-	3.	wait for approval
+4.3 Duplicate Files Protection
+
+If the AI detects two files with similar names or functions:
+
+The AI must:
+	1.	Read both files.
+	2.	Summarise differences.
+	3.	State whether they conflict, duplicate, or complement each other.
+	4.	Present Darren with three options:
+• keep A
+• keep B
+• merge A and B
+	5.	Wait for explicit approval.
+
+AI must never delete, merge, or move duplicates automatically.
+
+⸻
+
+4.4 No Deletion Without Permission
+
+AI must never delete a file unless Darren writes:
+
+“I authorise deletion of [path].”
+
+⸻
+
+4.5 No Full Overwrites
+
+AI must never replace an entire file unless Darren writes:
+
+“I authorise overwrite of [path].”
+
+Partial edits are allowed only if Darren requests modifications to that file.
 
 ⸻
 
 5. Behaviour Rules for Firebase AI
 
-5.1 Scope of each task
+5.1 Task Workflow
 
-Each task must follow this sequence:
+Every task must follow:
 	1.	Read GOVERNANCE.md
 	2.	Confirm understanding
-	3.	Ask Darren to name the feature, page, or component he wants fixed
-	4.	Work only within that single scope
-	5.	Output a summary and changed files
+	3.	Ask Darren to name the file, folder, or feature
+	4.	Act only within that scope
+	5.	Output summary + changed files
 	6.	Stop and wait
 
-The AI must not proceed to a second task without new instructions.
+⸻
 
 5.2 When Darren does not know file paths
 
 The AI must:
 	1.	Ask clarifying questions
-	2.	Offer a short list of likely file candidates
+	2.	Provide a short list of likely candidates
 	3.	Wait for Darren to pick one
-	4.	Then act only on that file
+	4.	Only then act
 
-5.3 Allowed operations without naming file paths
+⸻
 
-The AI may perform these without Darren specifying paths:
-	1.	Create new files
-	2.	Create new folders inside src
-	3.	Move files into obvious correct locations if the purpose is extremely clear
-Example: a React component file located in a folder named old-components is clearly a component
-	4.	Update import paths after a move
-	5.	Refactor a file internally if Darren asked for it
+5.3 Allowed Without File Paths
 
-The AI must ask for approval before performing larger reorganisations.
+AI may do these autonomously:
 
-5.4 Proposals before actions
+• create new files
+• create new folders inside src
+• move files into obvious locations only after proposal + approval
+• update import paths after approved moves
 
-The AI must propose structural changes before performing them.
-Examples:
-	•	proposing a better folder location
-	•	proposing to merge duplicate logic
-	•	proposing to move a service into the service folder
-	•	proposing to modularise a large file
-	•	proposing to create a new context
+AI must always seek approval before larger reorganisations.
 
-The AI must wait for explicit approval.
+⸻
 
-5.5 No autonomous audits
+5.4 Proposals Before Action
 
-The AI must not:
-	•	scan the whole project
-	•	list violations
-	•	attempt to restructure the project
+AI must propose changes first when involving:
 
-Unless Darren writes:
+• folder moves
+• renames
+• logic consolidation
+• modular splits
+• merging duplicates
+• reorganising styles
+
+Only act after explicit approval.
+
+⸻
+
+5.5 No Autonomous Audits
+
+The AI must not scan the project unless Darren writes:
+
 “Audit this item”
 or
 “Audit this folder”
-or
-“Audit this feature”.
-
-Then the AI must only examine the requested file or folder.
 
 ⸻
 
 6. Editing Rules
 
-6.1 Allowed edits
+AI may edit:
 
-The AI may edit:
-	•	functions
-	•	JSX
-	•	imports
-	•	exports
-	•	types
-	•	logic inside the named file
-	•	write new supporting files if needed
+• functions
+• JSX
+• imports / exports
+• logic
+• new supporting files
 
-6.2 Forbidden edits
+AI must not edit:
 
-The AI must not:
-	•	change project configuration
-	•	change lint rules
-	•	change formatting settings
-	•	change Vite or Build settings
-	•	change package.json
-	•	change tsconfig
-	•	create or modify workflow files unless asked
-	•	modify Git settings
-	•	add placeholder or dummy data
-	•	generate fake code to fill gaps
+• package.json
+• Vite config
+• eslint, prettier, or configs
+• environment files
+• GitHub workflow files
+
+Unless Darren explicitly requests it.
 
 ⸻
 
-7. Safety Rules
+7. Git + Versioning Rules (Balanced Mode)
 
-7.1 When uncertain
+The AI must support safe versioning, not block it.
 
-The AI must stop and ask.
-Examples:
-	•	purpose of a file unclear
-	•	style file dependencies unclear
-	•	similar files exist and the AI cannot tell which is correct
-	•	moving a file might break imports
-	•	refactoring might change behaviour
+7.1 The user is the release authority
 
-7.2 If the AI detects breakage risk
+The AI must never auto-version unless Darren explicitly says:
 
-The AI must say:
+“Create version x.x.x”
 
-“This change may be unsafe for the following reason. Do you want me to continue”
+7.2 After Darren requests a version
 
-It must never silently risk breaking the app.
+The AI must:
+	1.	Commit all files touched in this task
+	2.	Use commit message:
+
+chore: version x.x.x
+
+
+	3.	Push changes
+	4.	Confirm success
+
+7.3 If a commit fails
+
+AI must stop immediately and report the error.
+
+7.4 The AI must never interfere with Git operations
+
+If Darren asks:
+
+“Create a new version”
+“Save this as v2.1.0”
+“Commit the changes now”
+
+The AI must do it.
 
 ⸻
 
-8. Output Format
+8. Multi-File Safety Logic
 
-After every operation, the AI must output:
-	1.	A short summary
-	2.	A list of changed files
-	3.	The full content of each changed file
-	4.	A statement confirming it followed GOVERNANCE.md
+Before making any change, the AI must check for:
 
-The AI must not output:
-	•	unrelated files
-	•	copies of the entire project
-	•	GOVERNANCE.md itself
-	•	config files
+• dependent imports
+• dependent styles
+• related index files
+• duplicate names
+• possible regressions
+
+If risk is detected, AI must say:
+
+“This may be unsafe because […]. Do you want me to continue?”
 
 ⸻
 
-9. Precedence
+9. Output Format
 
-If rules conflict:
-	1.	Direct instruction from Darren Bell
+After each operation, the AI must output:
+	1.	Summary of what changed
+	2.	List of changed files
+	3.	Full content of each changed file
+	4.	Confirmation of compliance with this file
+
+It must not output:
+
+• full project trees
+• unrelated files
+• GOVERNANCE.md itself
+• config files
+
+⸻
+
+10. Precedence
+	1.	Direct instruction from Darren
 	2.	This GOVERNANCE.md
 	3.	Existing src structure
 	4.	Standard practice
 
 ⸻
 
-10. Failsafe
+11. Failsafe
 
-If the AI is unsure, it must stop and ask.
-If the AI is about to break something, it must stop and ask.
-If the AI sees two possible interpretations, it must stop and ask.
-
-No assumptions. No silent corrections.
+If uncertain, the AI must stop and ask.
 
 ⸻
 
-11. Latitude for the AI
+12. Latitude (Balanced Mode)
 
-To allow productive work without constant micro instructions, the AI has controlled latitude in these areas:
-	1.	Suggesting better structure
-	2.	Suggesting moves or renames
-	3.	Suggesting style reorganisation
-	4.	Creating new supporting files
-	5.	Generating cleaner code
-	6.	Updating imports after a move
-	7.	Identifying duplicates
-	8.	Proposing consolidation of logic
-	9.	Creating new folders where missing
-	10.	Cleaning unused imports or unreachable code
+AI is allowed to:
 
-But the AI must always present proposals first and wait for approval before altering existing files.
+• suggest structural improvements
+• identify redundant files
+• suggest merges
+• suggest reorganisations
+• suggest new supporting folders
+• fix imports after movements
+• create helper utilities
+• create new modular files
+
+AI must always propose first and wait for approval.
 
 ⸻
 
-12. Final rule
+13. Final Rule
 
-If the AI breaks this governance file, the operation is invalid.
+If the AI violates GOVERNANCE, all actions are invalid.
 The AI must stop immediately and request correction.
+
