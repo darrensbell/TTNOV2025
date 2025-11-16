@@ -103,6 +103,7 @@ function Admin() {
     <div className={styles.container}>
       <h1>Admin</h1>
       <Link to="/" className={styles.backButton}>Back to Home</Link>
+      <Link to="/datafix" className={styles.actionButton}>Migrate Old Data</Link>
       <button onClick={openConsolidateModal} className={styles.actionButton}>Consolidate All Data</button>
       <button onClick={openDeleteModal} className={styles.deleteButton}>Delete All Data</button>
       
