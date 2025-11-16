@@ -7,7 +7,7 @@ const SalesSummary = ({ title, gross, ticketsSold }) => {
     <div className={styles.salesSummary}>
       <h4>{title}</h4>
       <div className={styles.data}>
-        <p>Gross: £{gross}</p>
+        <p>Gross: {gross}</p>
         <p>Tickets Sold: {ticketsSold}</p>
       </div>
     </div>
