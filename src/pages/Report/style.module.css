@@ -19,16 +19,24 @@
 }
 
 .dashboardGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
 }
 
-/* The .stat-card styles are defined globally in index.css, 
-   but we can add specific overrides here if needed */
-
-.statCard {
-    /* Example of an override if we wanted a different background for this page */
-    /* background-color: #2a3a4a; */
+.rowTop, .rowBottom {
+    display: flex;
+    gap: 1.5rem;
 }
 
+.rowTop > * {
+    flex: 1 1 calc(20% - 1.5rem); /* 5 cards */
+}
+
+.rowBottom > * {
+    flex: 1 1 calc(25% - 1.5rem); /* 4 cards */
+}
+
+.statCard {
+    /* background-color: #2a3a4a; */
+}
