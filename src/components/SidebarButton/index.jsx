@@ -1,24 +1,27 @@
-
 import { Link } from 'react-router-dom';
 import styles from './SidebarButton.module.css';
-import buttonStyles from './button.module.css';
 
-function SidebarButton({ to, onClick, children }) {
-  const buttonClassName = `${buttonStyles.button} ${buttonStyles['button-secondary']} ${styles.sidebarButton}`;
+const SidebarButton = ({ to, onClick, children, icon }) => {
+  const content = (
+    <>
+      {icon}
+      <span>{children}</span>
+    </>
+  );
 
   if (to) {
     return (
-      <Link to={to} className={buttonClassName}>
-        {children}
+      <Link to={to} className={styles.sidebarButton}>
+        {content}
       </Link>
     );
   }
 
   return (
-    <button className={buttonClassName} onClick={onClick}>
-      {children}
+    <button onClick={onClick} className={styles.sidebarButton}>
+      {content}
     </button>
   );
-}
+};
 
 export default SidebarButton;

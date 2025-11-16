@@ -1,0 +1,12 @@
+.appContainer {
+  display: flex;
+  height: 100vh;
+  background-color: var(--background-color);
+}
+
+.mainContent {
+  flex-grow: 1;
+  padding: 30px;
+  overflow-y: auto;
+  margin-left: 220px; /* Same as sidebar width */
+}
