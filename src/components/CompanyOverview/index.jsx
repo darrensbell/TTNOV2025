@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './style.module.css';
 import { FaHome, FaPoundSign, FaTicketAlt, FaRegCalendarAlt } from 'react-icons/fa';
 
+// CompanyOverview component to display key company stats
 const CompanyOverview = ({ stats }) => {
     return (
         <div className={styles.overviewCard}>
