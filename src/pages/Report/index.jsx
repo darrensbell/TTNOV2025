@@ -168,14 +168,12 @@ function Report() {
                 value={`£${summary.overallATP.toFixed(2)}`}
                 icon={<FaClock />}
                 footer="Avg. Ticket Price"
-                cardClassName="stat-card--pink"
             />
             <StatCard 
                 title="Days to Performance" 
                 value={summary.daysToPerformance !== undefined ? summary.daysToPerformance : 'N/A'}
                 icon={<FaCalendarDay />}
                 footer="Until first show"
-                cardClassName="stat-card--pink"
             />
 
             {/* Last Day's Sales Cards */}
