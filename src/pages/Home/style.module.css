@@ -97,3 +97,8 @@
   color: var(--text-secondary);
   margin-top: 1.5rem;
 }
+
+.totalGrossStat {
+    font-weight: 700;
+    color: white;
+}

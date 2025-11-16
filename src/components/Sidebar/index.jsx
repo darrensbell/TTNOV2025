@@ -7,6 +7,7 @@ import packageJson from '../../../package.json';
 
 const Sidebar = ({ onIngestClick }) => {
   const [time, setTime] = useState(new Date());
+  const commitDate = 'Sun Nov 16 19:30:47 2025 +0000';
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -33,7 +34,10 @@ const Sidebar = ({ onIngestClick }) => {
         <div className={styles.time}>
             {time.toLocaleDateString()} {time.toLocaleTimeString()}
         </div>
-        <div className={styles.version}>v{packageJson.version}</div>
+        <div className={styles.version}>
+          v{packageJson.version}
+          <span className={styles.tooltip}>{commitDate}</span>
+        </div>
       </div>
     </div>
   );

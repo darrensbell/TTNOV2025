@@ -77,7 +77,7 @@ function Home() {
               <div className={styles.cardBody}>
                 <div className={styles.stat}>
                     <FaPoundSign />
-                    <span>{event.totalGross.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span className={styles.totalGrossStat}>{event.totalGross.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span>
                 </div>
                 <div className={styles.stat}>
                     <FaTicketAlt />

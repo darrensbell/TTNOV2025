@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import Sidebar from '../../components/Sidebar';
+import IngestCSV from '../../features/IngestCSV';
 import Home from '../Home';
 import Report from '../Report';
-import Admin from '../Admin';
 import Show from '../Show';
 import DataFix from '../DataFix';
-import IngestCSV from '../../features/IngestCSV';
-import Sidebar from '../../components/Sidebar';
+import Admin from '../Admin';
 import './style.css';
 
 function App() {

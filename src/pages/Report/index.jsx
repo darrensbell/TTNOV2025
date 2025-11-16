@@ -5,14 +5,14 @@ import { db } from '../../services/firebase';
 import styles from './style.module.css';
 import { FaWallet, FaTicketAlt, FaPercentage, FaClock, FaCalendarDay, FaHistory } from 'react-icons/fa';
 
-const StatCard = ({ title, value, icon, footer, cardClassName }) => (
-    <div className={`stat-card ${styles.statCard} ${cardClassName || ''}`}>
-        <div className="stat-card-title">
+const StatCard = ({ title, value, icon, footer }) => (
+    <div className={styles.statCard}>
+        <div className={styles['stat-card-title']}>
             <span>{title}</span>
-            <div className="stat-card-icon">{icon}</div>
+            <div className={styles['stat-card-icon']}>{icon}</div>
         </div>
-        <div className="stat-card-value">{value}</div>
-        {footer && <div className="stat-card-footer">{footer}</div>}
+        <div className={styles['stat-card-value']}>{value}</div>
+        {footer && <div className={styles['stat-card-footer']}>{footer}</div>}
     </div>
 );
 
