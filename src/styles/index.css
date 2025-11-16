@@ -25,11 +25,6 @@ body {
     border: 1px solid var(--glass-green-border);
 }
 
-.stat-card--pink {
-    background-color: var(--glass-pink-bg);
-    border: 1px solid var(--glass-pink-border);
-}
-
 .stat-card-title {
     display: flex;
     align-items: center;
