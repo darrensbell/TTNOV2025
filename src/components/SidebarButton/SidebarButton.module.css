@@ -1,0 +1,16 @@
+
+.sidebarButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem; /* The requested font size */
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box; /* This is the fix */
+}
+
+.icon {
+  font-size: 0.8rem; /* Matching icon size */
+  margin-right: 0.75rem; /* Spacing between icon and text */
+}
