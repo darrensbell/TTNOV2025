@@ -25,10 +25,25 @@ function Report() {
     const fetchData = async () => {
       try {
         if (eventName) {
+          const decodedEventName = decodeURIComponent(eventName);
+
+          // Fetch sales data
           const salesDataCollection = collection(db, 'sales_data');
-          const q = query(salesDataCollection, where('Event Name', '==', decodeURIComponent(eventName)));
-          const querySnapshot = await getDocs(q);
-          const firestoreData = querySnapshot.docs.map(doc => doc.data());
+          const salesQuery = query(salesDataCollection, where('Event Name', '==', decodedEventName));
+          const salesQuerySnapshot = await getDocs(salesQuery);
+          const firestoreData = salesQuerySnapshot.docs.map(doc => doc.data());
+
+          // Fetch ALL show data for the event name to sum ticketsAvailable
+          const showsCollection = collection(db, 'shows');
+          const showQuery = query(showsCollection, where('name', '==', decodedEventName));
+          const showQuerySnapshot = await getDocs(showQuery);
+          
+          let totalTicketsAvailable = 0;
+          if (!showQuerySnapshot.empty) {
+            showQuerySnapshot.docs.forEach(showDoc => {
+                totalTicketsAvailable += parseInt(showDoc.data().ticketsAvailable, 10) || 0;
+            });
+          }
 
           let firstPerformanceDate = null;
 
@@ -37,8 +52,9 @@ function Report() {
               acc.totalTicketsSold += parseInt(item['Sold Tickets'], 10) || 0;
               acc.atpValues.push(parseFloat(item.atp) || 0);
 
-              if (item.performanceDateTime && item.performanceDateTime.toDate) {
-                const performanceDate = item.performanceDateTime.toDate();
+              // Correctly access PerformanceDate
+              if (item.PerformanceDate) {
+                const performanceDate = new Date(item.PerformanceDate); // Assuming YYYY-MM-DD string
                 if (!firstPerformanceDate || performanceDate < firstPerformanceDate) {
                     firstPerformanceDate = performanceDate;
                 }
@@ -59,7 +75,12 @@ function Report() {
             calculatedSummary.daysToPerformance = Math.ceil(timeDiff / (1000 * 3600 * 24));
           }
 
-          setSummary(calculatedSummary);
+          // Calculate % Occupancy using totalTicketsAvailable
+          const occupancy = (totalTicketsAvailable > 0)
+            ? ((calculatedSummary.totalTicketsSold / totalTicketsAvailable) * 100).toFixed(1) + '%'
+            : 'N/A';
+
+          setSummary({ ...calculatedSummary, occupancy, totalTicketsAvailable });
         }
       } catch (error) {
         console.error("Error fetching event data from Firestore: ", error);
@@ -96,7 +117,7 @@ function Report() {
             />
             <StatCard 
                 title="% Occupancy" 
-                value="[PLACEHOLDER]" 
+                value={summary.occupancy}
                 icon={<FaPercentage />}
                 footer="Based on capacity"
             />

@@ -28,8 +28,10 @@ function DataFix() {
       for (const sale of unlinkedSalesData) {
         const eventName = sale['Event Name'];
         const perfType = sale.performanceType;
-        const perfTime = sale['Performance Time']; // Correctly reference Performance Time
-        const perfDate = sale['Performance Date']; // Correctly reference Performance Date
+        // Corrected field names for Performance Time and Performance Date from sales_data
+        const perfTime = sale['Performance Start Time']; 
+        const perfDate = sale.PerformanceDate; 
+
         const showKey = `${eventName} - ${perfType}`;
 
         if (!showsToCreate[showKey]) {

@@ -20,9 +20,9 @@
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  /* Fix for invisible text */
-  color: #000;
-  background-color: #fff;
+  /* Fix for invisible text: Ensure contrast */
+  color: #333; /* Darker text color */
+  background-color: #fff; /* White background for inputs */
 }
 
 button {
@@ -41,7 +41,9 @@ button:hover {
 .readOnlyField {
     padding: 8px;
     margin-bottom: 10px;
-    background-color: #f2f2f2;
-    border: 1px solid #ccc;
+    background-color: #e9ecef; /* Light gray background for read-only fields */
+    border: 1px solid #ced4da;
     border-radius: 4px;
+    color: #495057; /* Darker text color for read-only fields */
+    font-weight: bold;
 }

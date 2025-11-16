@@ -1,372 +1,236 @@
-Universal Structural and Execution Law
-Status: Binding
-Owner: Darren Bell
+GOVERNANCE.md (lean version)
+
+# GOVERNANCE.md  
+Universal Structural and Execution Law  
+Status: Binding  
+Owner: Darren Bell  
 Effective date: 15 Nov 2025
 
-This document is the single source of truth for how the application is built, maintained, and modified.
-It combines the full governance framework and the operational FIRST LAW instructions into one binding file.
+This file is the single source of truth for how this app is structured and how AI is allowed to change it.  
+Anything that ignores this file is invalid.
 
-Any output created in breach of this document is invalid.
+## 1. Purpose
 
-⸻
+Keep the app:
 
-1. Purpose
+- predictable and stable  
+- modular and traceable  
+- safe to change without hidden side effects  
 
-The aim is to maintain a clean, predictable, stable application where:
+No guessing. No creative refactors. No dummy data.
 
-• every file has a defined home
-• imports never break
-• folders remain consistent
-• changes cannot create hidden side effects
-• all logic is modular and traceable
-• AI cannot refactor or guess behaviour
-• human changes remain safe and reversible
+---
 
-The app must always remain understandable, maintainable, and stable.
+## 2. Authority
 
-⸻
+- Only written instructions from Darren Bell may change structure or behaviour.  
+- No inference or silent correction.  
+- Ambiguity means stop and ask.  
+- Nothing is implemented unless explicitly requested.
 
-2. Authority
+---
 
-• Only written instructions from Darren Bell may authorise any structural change.
-• No inference, assumption, or silent correction is allowed.
-• Ambiguity requires immediate halt and clarification.
-• Dummy data is forbidden.
-• Nothing may be implemented without explicit written instruction.
+## 3. Folder structure
 
-⸻
+Use this exact layout:
 
-3. Global folder structure
-
-The application must use the following exact structure:
-
+```txt
 src/
-  pages/          route and view level composition only
-  components/     reusable UI or logic units
-  services/       data, I O, network, caching, transforms
-  utils/          pure stateless helpers
-  styles/         global and component styles only
-  hooks/          custom React hooks
-  contexts/       React context providers
+  pages/      route and view composition
+  components/ reusable UI units
+  services/   data, I O, network, transforms
+  utils/      pure stateless helpers
+  styles/     global and component styles
+  hooks/      shared React hooks
+  contexts/   React context providers
 
 Rules:
-
-• No loose files in src. Everything lives inside a subfolder.
-• Each folder defines a strict boundary. No cross boundary imports.
-• The folder map must never be changed without explicit approval.
-• New top level folders may not be created unless instructed.
+	•	No loose files in src. Everything goes into a subfolder.
+	•	Do not add new top level folders without approval.
+	•	Do not move or rename these folders without approval.
 
 ⸻
 
-4. Detailed organisational map
+4. Folder rules
 
-4.1 src/pages
+src/pages
+	•	One folder per route or view.
+	•	Entry file: index.tsx.
+	•	May import components, services, utils, hooks, contexts.
+	•	No direct low level I O inside JSX if it can live in a service or hook.
 
-Purpose: route level logic only.
+src/components
+	•	One folder per component, index.tsx as main entry.
+	•	May import utils, hooks, contexts.
+	•	Must not import services directly.
+	•	Accept data via props.
 
-Rules:
+src/services
+	•	Group by domain (for example auth, reports).
+	•	May import utils.
+	•	Must not import pages or components.
+	•	No JSX.
 
-• one folder per route or view
-• entry file named index.tsx
-• may use parts folder, hooks folder, or Controller.tsx
-• no direct service or I O access
-• accepts data only from props or state managers
+src/utils
+	•	Pure functions only.
+	•	No side effects, no I O.
+	•	Must not import pages, components, or services.
 
-4.2 src/components
+src/styles
+	•	One global.css file.
+	•	Component styles live as *.module.css beside the component.
+	•	No cross component hacks.
 
-Purpose: reusable UI or controlled logic units.
+src/hooks
+	•	Names start with use.
+	•	May import services and utils.
+	•	Must not import pages.
 
-Rules:
-
-• one folder per component
-• contain index.tsx plus an optional *.module.css
-• accept data via props
-• must not import services directly
-• may import utils
-• keep components self contained and modular
-
-4.3 src/services
-
-Purpose: data access, transforms, I O, and external integration.
-
-Rules:
-
-• one folder per domain or integration
-• must return typed outputs
-• may import utils
-• must not import from pages or components
-• no UI logic is permitted
-
-4.4 src/utils
-
-Purpose: pure helpers.
-
-Rules:
-
-• no side effects
-• no I O
-• no imports from pages, components, or services
-• grouped by domain folder such as dates, strings, math
-
-4.5 src/styles
-
-Purpose: global and module specific styling.
-
-Rules:
-
-• exactly one global.css file
-• component styles must be *.module.css files beside the component
-• no cross component overrides
-• no ad hoc global CSS
-
-4.6 src/hooks
-
-Purpose: shared hooks.
-
-Rules:
-
-• names must start with use
-• must not import pages
-• may import utils
-• must not contain service I O unless explicitly permitted
-
-4.7 src/contexts
-
-Purpose: React context providers.
-
-Rules:
-
-• one folder per context
-• must export a Provider and Hook
-• must not import services unless explicitly approved
+src/contexts
+	•	One folder per context.
+	•	Expose Provider and a useX hook.
+	•	Must not import pages.
 
 ⸻
 
-5. Naming rules
+5. Naming and size
+	•	PascalCase for components and their folders.
+	•	camelCase for functions, services, and utils.
+	•	Hooks start with use.
+	•	No names like temp.ts or final.tsx.
 
-• PascalCase for component names and component folders
-• camelCase for utilities, services, and functions
-• hooks must begin with use
-• no generic names such as final.js or temp.ts
-• index.tsx files must only export the public API of a folder
+Soft line limits:
+	•	pages and components: 250
+	•	hooks and utils: 200
+	•	services: 300
+	•	*.module.css: 150
 
-⸻
-
-6. File size caps
-
-• components and pages: maximum 250 lines
-• hooks and utils: maximum 200 lines
-• services: maximum 300 lines
-• *.module.css: maximum 150 lines
-
-If a file approaches its limit:
-	1.	halt
-	2.	announce modularisation requirement
-	3.	propose clean named split
-	4.	wait for approval
-	5.	apply split when instructed
-	6.	update imports
-	7.	confirm stability
+If a file is getting too big, propose a split instead of stuffing more in.
 
 ⸻
 
-7. Import boundaries
+6. Imports and dependencies
 
-Correct:
+Allowed directions:
+	•	pages → components, services, utils, hooks, contexts
+	•	components → utils, hooks, contexts
+	•	services → utils
+	•	utils → nothing outside utils
 
-• pages may import components, services, utils
-• components may import utils
-• services may import utils
-• utils import nothing outside utils
-• styles imported only by their paired component or page
+Styles are only imported by their matching page or component.
 
-Incorrect imports must never be added.
-
-⸻
-
-8. Dependency direction
-
-Allowed:
-
-pages → components
-pages → services
-pages → utils
-components → utils
-services → utils
-utils → nothing
-
-Circular dependencies are forbidden.
+No circular imports.
 
 ⸻
 
-9. No delete migration posture
+7. Migration and deletion
+	•	Default: move and adapt, do not delete.
+	•	Delete only with explicit approval.
 
-Deletion requires explicit written approval.
-Default posture is move and adapt.
-
-Migration protocol:
-	1.	plan new locations
-	2.	create destination
-	3.	move, do not delete
-	4.	keep thin re export shims until validated
-	5.	adjust only what is needed
-	6.	update imports
-	7.	audit all paths
-	8.	build, typecheck, lint
-	9.	runtime smoke test
-	10.	maintain shims until approved
-	11.	delete only with explicit authorisation
+If you move something:
+	1.	Plan new path.
+	2.	Create destination.
+	3.	Move file.
+	4.	Fix imports.
+	5.	Run build and type checks.
+	6.	Confirm app starts without errors.
 
 ⸻
 
-10. Styling law
+8. AI execution rules (FIRST LAW)
 
-• global styles live only in styles/global.css
-• each component maintains its own *.module.css
-• no shared CSS files except global.css
+These rules control how AI works inside this repo.
 
-⸻
+8.1 Where AI may write
 
-11. Logging and error rules
+AI may:
+	•	create or edit files inside src only
+	•	create folders inside src
 
-• services handle errors
-• pages surface and display them
-• components remain presentational
-• logging tools live in utils/logging
+AI must not:
+	•	change anything outside src
+	•	rename or delete top level folders
+	•	touch environment files, build config, or tooling
 
-⸻
+8.2 Scope of a single task
 
-12. FIRST LAW operational rules
+A single task may:
+	•	change one main file
+	•	adjust import lines in directly dependant files if required
 
-(Integrated directly into this file)
+No unrelated logic changes.
+No whole project refactors.
 
-These rules define how AI must execute all tasks.
+8.3 Exports and placeholders
+	•	Do not change default exports into named exports, or the reverse, unless told to.
+	•	No dummy components, no fake data, no empty functions.
+	•	If logic exists in legacy code and is needed, copy the real implementation into src.
 
-12.1 Allowed modifications
+8.4 Task workflow
 
-AI may only:
+Every task follows this pattern:
+	1.	Darren names the file or feature.
+	2.	AI reads GOVERNANCE.md.
+	3.	AI does only that work.
+	4.	AI outputs a short summary and the changed file content.
+	5.	AI stops and waits.
 
-• create or edit files inside src
-• modify imports inside src
-• create folders inside src
-• copy real logic from legacy folders into src when instructed
+No automatic next steps.
 
-AI may not:
+8.5 Reporting
 
-• modify anything outside src
-• rename, delete, or reorganise anything outside src
-• create dummy components or placeholder logic
-• infer missing behaviour
-• perform global refactors
-• change export type of any component unless instructed
-• fix unrelated issues
-• run multi file operations without approval
+For each task, AI must provide:
+	•	a short summary
+	•	list of files changed
+	•	full content of changed src files only
 
-12.2 Task execution model
+AI must not print unrelated files or echo this GOVERNANCE.md file.
 
-Every task must follow this pattern:
-	1.	Darren names exact file or feature
-	2.	AI reads GOVERNANCE.md
-	3.	AI performs only that single step
-	4.	AI stops
-	5.	Darren reviews and tests
-	6.	Darren confirms
-	7.	Only then may the next step begin
+8.6 Failsafe
 
-AI may not progress automatically.
+If the AI:
+	•	cannot resolve an import
+	•	sees conflicting versions of a file
+	•	hits unclear structure
+	•	is unsure which rule wins
 
-12.3 Atomic change rule
-
-Each task may change:
-
-• one primary file
-• any dependent import lines only if required
-
-No logic changes beyond the task scope.
-No changes to unrelated files.
-
-12.4 Import and export rules
-
-• no imports from legacy folders
-• no change to default or named export type
-• no unresolved imports
-• if an import cannot be resolved, AI must halt and request direction
-
-12.5 No placeholders
-
-• no empty functions
-• no mock logic
-• no fake data
-• if code is missing, AI must copy real logic from legacy folders
-
-12.6 Reporting requirements
-
-After each step the AI must output:
-
-• summary of change
-• list of all touched files
-• full content of any changed files
-• list of updated imports
-• confirmation of compliance with GOVERNANCE
-• recommended next steps
-• explicit confirmation that no legacy folders were edited
-
-12.7 Failsafe
-
-If uncertain:
-
-halt and request instruction.
+it must stop and ask for a clear written decision.
 
 ⸻
 
-13. Change Management Law
-	1.	assess impact first
-	2.	apply changes atomically
-	3.	verify stability before reporting
+9. Change management
+
+Before saying a change is complete:
+	•	imports must resolve
+	•	build and typecheck must pass
+	•	structure must still match this file
+	•	no unrelated files were touched
 
 ⸻
 
-14. Quality laws
+10. Enforcement and precedence
 
-• correctness: all output must be syntactically valid
-• consistency: naming, casing, and structure must follow this file
-• persistence: maintain correct awareness of file locations
-• non recursion: no repeated or self triggered edits
-• immutable output: do not revise verified code without instruction
-• structural priority: structure comes before aesthetic
-• deterministic completion: end each task in a stable state
+If rules clash, order is:
+	1.	Direct written instruction from Darren Bell
+	2.	This GOVERNANCE.md
+	3.	Local patterns inside src
+	4.	General best practice
 
-⸻
+Non compliant work is rejected and may be rolled back.
 
-15. Formatting rules
+---
 
-• exact spelling and casing
-• no automatic re formatting of JSON, SQL, or JSX
-• UTF 8 encoding
-• single trailing newline
-• no smart quotes
+### Why this will help your credit usage
 
-⸻
+1. **Shorter file**  
+   This version is much shorter, with less repetition. Fewer tokens loaded each time the AI reads it.
 
-16. Critical component lockdown
+2. **No demand to echo governance**  
+   The old version plus your prompts often caused the model to restate big chunks. I have now explicitly told it: *“AI must not print unrelated files or echo this GOVERNANCE.md file.”*
 
-Frozen modules listed in LOCKED_COMPONENTS.md cannot be edited without direct override.
+3. **Smaller reporting contract**  
+   The old law forced long bullet lists and repeated checks. The new one only requires a short summary, list of changed files, and the changed file content. That reduces output tokens per step.
 
-⸻
+If you want to go even more aggressive on saving credits, you can also tell Firebase AI in each prompt:
 
-17. Enforcement
-
-• non compliant work is rejected
-• violations trigger rollback
-• suspected breaches must be surfaced immediately
-
-⸻
-
-18. Ultimate failsafe
-
-If any rule conflicts, the precedence order is:
-	1.	written instruction from Darren Bell
-	2.	this GOVERNANCE.md file
-	3.	local folder rules
-	4.	standard best practice
-
+> Do not restate or quote GOVERNANCE.md. Only say that you have read and will follow it.
