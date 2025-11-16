@@ -1,38 +1,42 @@
-
-import { FaHome, FaCog, FaUpload, FaTicketAlt } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { FaHome, FaTicketAlt, FaUpload, FaCog, FaDatabase } from 'react-icons/fa';
 import Logo from '../Logo';
-import Footer from '../Footer';
-import SidebarButton from '../SidebarButton'; // <-- IMPORTING THE NEW COMPONENT
+import SidebarButton from '../SidebarButton';
 import styles from './Sidebar.module.css';
-import buttonStyles from '../SidebarButton/SidebarButton.module.css'; // <-- IMPORTING THE BUTTON-SPECIFIC STYLES
+import packageJson from '../../../package.json';
 
-function Sidebar({ onIngestClick }) {
+const Sidebar = ({ onIngestClick }) => {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className={styles.sidebar}>
-      <div className={styles.sidebarTop}>
-        <div className={styles.logoContainer}>
-          <Logo />
-        </div>
-        <nav className={styles.mainNav}>
-          <SidebarButton to="/">
-            <FaHome className={buttonStyles.icon} /> HOME
-          </SidebarButton>
-          <SidebarButton to="/shows">
-            <FaTicketAlt className={buttonStyles.icon} /> SHOWS
-          </SidebarButton>
-          <SidebarButton onClick={onIngestClick}>
-            <FaUpload className={buttonStyles.icon} /> INGEST CSV
-          </SidebarButton>
-          <SidebarButton to="/admin">
-            <FaCog className={buttonStyles.icon} /> ADMIN
-          </SidebarButton>
-        </nav>
+      <div className={styles.logoContainer}>
+        <Logo />
       </div>
-      <div className={styles.sidebarBottom}>
-        <Footer />
+      <nav className={styles.nav}>
+        <SidebarButton to="/" icon={<FaHome />}>HOME</SidebarButton>
+        <SidebarButton to="/shows" icon={<FaTicketAlt />}>SHOWS</SidebarButton>
+        <SidebarButton onClick={onIngestClick} icon={<FaUpload />}>INGEST CSV</SidebarButton>
+        <SidebarButton to="/admin" icon={<FaCog />}>ADMIN</SidebarButton>
+      </nav>
+      <div className={styles.footer}>
+        <div className={styles.dbStatus}>
+            <div className={styles.statusLight}></div>
+            <FaDatabase className={styles.dbIcon} />
+            <span>Database Connected</span>
+        </div>
+        <div className={styles.time}>
+            {time.toLocaleDateString()} {time.toLocaleTimeString()}
+        </div>
+        <div className={styles.version}>v{packageJson.version}</div>
       </div>
     </div>
   );
-}
+};
 
 export default Sidebar;

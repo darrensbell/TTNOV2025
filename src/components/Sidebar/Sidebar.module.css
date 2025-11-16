@@ -1,32 +1,52 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  width: 160px;
   background-color: var(--background-light);
-  color: var(--text-primary);
-  height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-  padding: 20px;
   border-right: 1px solid var(--border-color);
+  height: 100vh;
+  width: 220px;
+  flex-shrink: 0;
 }
 
-.logoContainer h1 {
-    letter-spacing: -0.1em;
-}
-
-.mainNav {
+.logoContainer {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 40px;
+  justify-content: center;
 }
 
-.sidebarBottom {
-  padding-top: 20px;
+.nav {
+  flex-grow: 1;
+  padding-top: 1rem;
+}
+
+.footer {
+  padding: 1rem;
   border-top: 1px solid var(--border-color);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dbStatus {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.statusLight {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--accent-green);
+  margin-right: 0.5rem;
+  box-shadow: 0 0 5px var(--accent-green);
+}
+
+.dbIcon {
+  margin-right: 0.5rem;
+  color: var(--accent-green);
+}
+
+.time {
+  margin-bottom: 0.5rem;
 }
