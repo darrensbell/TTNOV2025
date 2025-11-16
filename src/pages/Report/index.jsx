@@ -19,6 +19,7 @@ const StatCard = ({ title, value, icon, footer }) => (
 function Report() {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('Stats');
   const { eventName } = useParams();
 
   useEffect(() => {
@@ -126,17 +127,11 @@ function Report() {
     fetchData();
   }, [eventName]);
 
-  return (
-    <div className={styles.container}>
-        <div className={styles.header}>
-            <h1>{decodeURIComponent(eventName)}</h1>
-            <p>A consolidated, at-a-glance dashboard for this Concert.</p>
-        </div>
-
-      {loading ? (
-        <p>Loading dashboard...</p>
-      ) : summary ? (
-        <div className={styles.dashboardGrid}>
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'Stats':
+        return (
+          <div className={styles.dashboardGrid}>
             <div className={styles.rowTop}>
                 <StatCard 
                     title="Total Box Office" 
@@ -196,6 +191,48 @@ function Report() {
                 />
             </div>
         </div>
+        );
+      case 'Charts':
+        return <div>Charts Content</div>;
+      case 'AI Deep Dive':
+        return <div>AI Deep Dive Content</div>;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+        <div className={styles.header}>
+            <h1>{decodeURIComponent(eventName)}</h1>
+            <p>A consolidated, at-a-glance dashboard for this Concert.</p>
+        </div>
+
+        <div className={styles.tabs}>
+            <button 
+                className={`${styles.tabButton} ${activeTab === 'Stats' ? styles.active : ''}`}
+                onClick={() => setActiveTab('Stats')}
+            >
+                Stats
+            </button>
+            <button 
+                className={`${styles.tabButton} ${activeTab === 'Charts' ? styles.active : ''}`}
+                onClick={() => setActiveTab('Charts')}
+            >
+                Charts
+            </button>
+            <button 
+                className={`${styles.tabButton} ${activeTab === 'AI Deep Dive' ? styles.active : ''}`}
+                onClick={() => setActiveTab('AI Deep Dive')}
+            >
+                AI Deep Dive
+            </button>
+        </div>
+
+      {loading ? (
+        <p>Loading dashboard...</p>
+      ) : summary ? (
+        renderTabContent()
       ) : (
         <p>No data available to generate a dashboard.</p>
       )}
