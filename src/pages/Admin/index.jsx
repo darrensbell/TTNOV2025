@@ -12,6 +12,7 @@ import {
 import { db } from '../../services/firebase';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import styles from './style.module.css';
+import { formatDate } from '../../utils/date'; // Import the date utility
 
 function Admin() {
   const [summaryData, setSummaryData] = useState([]);
@@ -182,7 +183,7 @@ function Admin() {
             <tbody>
               {summaryData.map((row) => (
                 <tr key={row.id}>
-                  <td>{row.TransactionDate}</td>
+                  <td>{formatDate(row.TransactionDate)}</td>
                   <td>{row['Event Name']}</td>
                   <td>{row.performanceType}</td>
                   <td>{row.totalSoldGrossValue}</td>

@@ -2,18 +2,13 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import styles from './style.module.css';
+import Modal from '../../components/Modal/Modal.jsx';
+import ShowForm from '../../components/ShowForm/ShowForm.jsx';
+import { formatDate } from '../../utils/date'; // Import the new function
 
 function Show() {
   const [shows, setShows] = useState([]);
-  const [newShow, setNewShow] = useState({
-    name: '',
-    performanceType: '',
-    performanceTime: '',
-    firstShowDate: '',
-    onSaleDate: '',
-    ticketsAvailable: '',
-    boxOfficeGrossPotential: '',
-  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingShow, setEditingShow] = useState(null);
 
   const fetchShows = async () => {
@@ -26,93 +21,52 @@ function Show() {
     fetchShows();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewShow(prevState => ({ ...prevState, [name]: value }));
-  };
-
-  const handleAddShow = async () => {
-    if (!newShow.name) return; // Basic validation
-    await addDoc(collection(db, 'shows'), newShow);
-    setNewShow({
-        name: '',
-        performanceType: '',
-        performanceTime: '',
-        firstShowDate: '',
-        onSaleDate: '',
-        ticketsAvailable: '',
-        boxOfficeGrossPotential: '',
-    });
-    fetchShows();
-  };
-
-  const handleEdit = (show) => {
-    setEditingShow({ ...show });
-  };
-
-  const handleUpdateShow = async () => {
-    if (!editingShow) return;
-    const showRef = doc(db, 'shows', editingShow.id);
-    await updateDoc(showRef, editingShow);
+  const handleOpenModalForNew = () => {
     setEditingShow(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenModalForEdit = (show) => {
+    setEditingShow(show);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingShow(null);
+  };
+
+  const handleSubmit = async (formData) => {
+    if (editingShow) {
+      // Update existing show
+      const showRef = doc(db, 'shows', editingShow.id);
+      await updateDoc(showRef, formData);
+    } else {
+      // Add new show
+      await addDoc(collection(db, 'shows'), formData);
+    }
     fetchShows();
+    handleCloseModal();
   };
 
   return (
     <div className={styles.container}>
-      <h1>Manage Shows</h1>
-
-      <div className={styles.form}>
-        <h2>Add a New Show</h2>
-        <input
-          type="text"
-          name="name"
-          placeholder="Show Name"
-          value={newShow.name}
-          onChange={handleInputChange}
-        />
-         <input
-          type="text"
-          name="performanceType"
-          placeholder="Performance Type (e.g., Matinee, Evening)"
-          value={newShow.performanceType}
-          onChange={handleInputChange}
-        />
-         <input
-          type="text"
-          name="performanceTime"
-          placeholder="Performance Time (e.g., 2:00 PM)"
-          value={newShow.performanceTime}
-          onChange={handleInputChange}
-        />
-        <input
-          type="date"
-          name="firstShowDate"
-          value={newShow.firstShowDate}
-          onChange={handleInputChange}
-        />
-        <input
-          type="date"
-          name="onSaleDate"
-          value={newShow.onSaleDate}
-          onChange={handleInputChange}
-        />
-        <input
-          type="number"
-          name="ticketsAvailable"
-          placeholder="Tickets Available"
-          value={newShow.ticketsAvailable}
-          onChange={handleInputChange}
-        />
-        <input
-          type="number"
-          name="boxOfficeGrossPotential"
-          placeholder="Box Office Gross Potential"
-          value={newShow.boxOfficeGrossPotential}
-          onChange={handleInputChange}
-        />
-        <button onClick={handleAddShow}>Add Show</button>
+      <div className={styles.header}>
+        <h1>Manage Shows</h1>
+        <button className={styles.addButton} onClick={handleOpenModalForNew}>Add New Show</button>
       </div>
+
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+        title={editingShow ? 'Edit Show' : 'Add a New Show'}
+      >
+        <ShowForm 
+          initialData={editingShow}
+          onSubmit={handleSubmit}
+          onCancel={handleCloseModal}
+        />
+      </Modal>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
@@ -134,68 +88,18 @@ function Show() {
                 <td>{show.name}</td>
                 <td>{show.performanceType}</td>
                 <td>{show.performanceTime}</td>
-                <td>{show.firstShowDate}</td>
-                <td>{show.onSaleDate}</td>
+                <td>{formatDate(show.firstShowDate)}</td>
+                <td>{formatDate(show.onSaleDate)}</td>
                 <td>{show.ticketsAvailable}</td>
                 <td>{show.boxOfficeGrossPotential}</td>
                 <td>
-                  <button onClick={() => handleEdit(show)}>Edit</button>
+                  <button className={styles.editButton} onClick={() => handleOpenModalForEdit(show)}>Edit</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {editingShow && (
-        <div className={styles.modal}>
-          <h2>Edit Show</h2>
-           <input
-            type="text"
-            name="name"
-            value={editingShow.name}
-            onChange={(e) => setEditingShow({ ...editingShow, name: e.target.value })}
-          />
-            <input
-            type="text"
-            name="performanceType"
-            value={editingShow.performanceType}
-            onChange={(e) => setEditingShow({ ...editingShow, performanceType: e.target.value })}
-            />
-            <input
-            type="text"
-            name="performanceTime"
-            value={editingShow.performanceTime}
-            onChange={(e) => setEditingShow({ ...editingShow, performanceTime: e.target.value })}
-            />
-          <input
-            type="date"
-            name="firstShowDate"
-            value={editingShow.firstShowDate}
-            onChange={(e) => setEditingShow({ ...editingShow, firstShowDate: e.target.value })}
-          />
-          <input
-            type="date"
-            name="onSaleDate"
-            value={editingShow.onSaleDate}
-            onChange={(e) => setEditingShow({ ...editingShow, onSaleDate: e.target.value })}
-          />
-          <input
-            type="number"
-            name="ticketsAvailable"
-            value={editingShow.ticketsAvailable}
-            onChange={(e) => setEditingShow({ ...editingShow, ticketsAvailable: e.g.target.value })}
-          />
-          <input
-            type="number"
-            name="boxOfficeGrossPotential"
-            value={editingShow.boxOfficeGrossPotential}
-            onChange={(e) => setEditingShow({ ...editingShow, boxOfficeGrossPotential: e.target.value })}
-          />
-          <button onClick={handleUpdateShow}>Update</button>
-          <button onClick={() => setEditingShow(null)}>Cancel</button>
-        </div>
-      )}
     </div>
   );
 }
